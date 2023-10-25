@@ -11,6 +11,7 @@ import tech.bonda.sufest2023.repository.UserRepo;
 @Service
 public class UserService implements UserDetailsService {
 
+    @SuppressWarnings({"FieldCanBeLocal"})
     private final PasswordEncoder encoder;
 
     private final UserRepo userRepo;

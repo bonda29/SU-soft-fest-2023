@@ -17,6 +17,7 @@ public class TokenService {
 
     private final JwtEncoder jwtEncoder;
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final JwtDecoder jwtDecoder;
 
     private final Environment env;
