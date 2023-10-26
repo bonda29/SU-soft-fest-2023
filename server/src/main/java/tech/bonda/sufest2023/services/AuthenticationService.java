@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tech.bonda.sufest2023.models.DTOs.LoginDto;
+import tech.bonda.sufest2023.models.DTOs.UsernamePasswordDto;
 import tech.bonda.sufest2023.models.DTOs.UserDto;
 import tech.bonda.sufest2023.models.Role;
 import tech.bonda.sufest2023.models.User;
@@ -76,7 +76,7 @@ public class AuthenticationService {
     }
 
 
-    public ResponseEntity<?> login(LoginDto data) {
+    public ResponseEntity<?> login(UsernamePasswordDto data) {
 
         String username = data.getUsername();
         String password = data.getPassword();
