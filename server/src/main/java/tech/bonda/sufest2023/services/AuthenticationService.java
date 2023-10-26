@@ -18,6 +18,8 @@ import tech.bonda.sufest2023.models.Role;
 import tech.bonda.sufest2023.models.User;
 import tech.bonda.sufest2023.repository.UserRepo;
 import tech.bonda.sufest2023.repository.RoleRepo;
+import org.modelmapper.ModelMapper;
+
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -72,6 +74,12 @@ public class AuthenticationService {
                 .date_of_registration(LocalDate.now().toString())
                 .authorities(authorities)
                 .build();
+
+//        User savedUser = userRepo.save(user);
+//        ModelMapper modelMapper = new ModelMapper();
+//        UsernamePasswordDto userResponse = modelMapper.map(savedUser, UsernamePasswordDto.class);
+//        return ResponseEntity.ok(userResponse);
+
         return ResponseEntity.ok(userRepo.save(user));
     }
 
