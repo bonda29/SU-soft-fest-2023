@@ -12,12 +12,22 @@ export class UserService {
   loginUser(userData: any) {
     const { appUrl } = environment;
 
-    return this.http.post(`${appUrl}/auth/login`, userData);
+    const json = JSON.stringify(userData);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    })
+
+    return this.http.post(`${appUrl}/auth/login`, json, {headers});
   }
 
   registerUser(userData: any) {
     const { appUrl } = environment;
 
-    return this.http.post(`${appUrl}/auth/register`, userData);
+    const json = JSON.stringify(userData);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    })
+
+    return this.http.post(`${appUrl}/auth/register`, json, {headers});
   }
 }

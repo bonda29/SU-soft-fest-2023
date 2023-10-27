@@ -1,9 +1,11 @@
 <form [formGroup]="loginForm" (ngSubmit)="handleSubmit()">
+    <h2>Log into your account</h2>
+
     <label for="username">Username</label>
     <input name="username" type="text" formControlName="username">
 
     <label for="password">Password</label>
     <input name="password" type="password" formControlName="password">
 
-    <input type="submit">
+    <input type="submit" class="submit">
 </form>

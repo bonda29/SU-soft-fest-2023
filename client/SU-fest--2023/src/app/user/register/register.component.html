@@ -1,12 +1,28 @@
-<form [formGroup]="loginForm" (ngSubmit)="handleSubmit()">
-    <label for="username">Username</label>
+<form [formGroup]="registerForm" (ngSubmit)="handleSubmit()">
+    <h2>Create an account</h2>
+
+    <label *ngIf="selectedRole=='client'" for="nameSur" class="form-control">Name and Surname</label>
+    <input *ngIf="selectedRole=='client'" name="nameSur" type="text" formControlName="nameSur">
+
+    <label *ngIf="selectedRole=='company'" for="company" class="form-control">Company Name</label>
+    <input *ngIf="selectedRole=='company'" name="company" type="text" formControlName="company">
+
+    <label for="username" class="form-control">Username</label>
     <input name="username" type="text" formControlName="username">
 
-    <label for="password">Password</label>
+    <label for="email" class="form-control">Email</label>
+    <input name="email" type="email" formControlName="email">
+
+    <label for="password" class="form-control">Password</label>
     <input name="password" type="password" formControlName="password">
 
-    <label for="rePassword">Repeat Password</label>
+    <label for="rePassword" class="form-control">Repeat Password</label>
     <input name="rePassword" type="password" formControlName="rePassword">
 
-    <input type="submit">
+    <select name="role" (change)="onRoleChange()" formControlName="role">
+        <option value="client">Client</option>
+        <option value="company">Company</option>
+    </select>
+
+    <input type="submit" class="submit">
 </form>

@@ -1,0 +1,8 @@
+<div>
+    <h2>{{listing.name}}</h2>
+    <p>{{listing.description}}</p>
+    <p>{{listing.price}}</p>
+    
+    <a href="/business-edit/{{listing.id}}"><button>EDIT</button></a>
+    <a><button (click)="deleteListing()">DELETE</button></a>
+</div>

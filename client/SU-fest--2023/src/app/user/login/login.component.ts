@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -11,7 +12,8 @@ export class LoginComponent {
 
   constructor(
     private formBuilder: FormBuilder,
-    private userService: UserService) {}
+    private userService: UserService,
+    private router: Router) {}
 
   loginForm = this.formBuilder.group({
     username: ['', [Validators.required]],
@@ -27,7 +29,19 @@ export class LoginComponent {
     this.userService.loginUser(userData)
       .subscribe(
         (data) => {
-          console.log(data);
+          const entries = Object.entries(data);
+
+          localStorage.setItem('id', entries[0][1]);
+          localStorage.setItem('email', entries[1][1]);
+          localStorage.setItem('username', entries[2][1]);
+          localStorage.setItem('role', entries[3][1]);
+          localStorage.setItem('token', entries[4][1]);
+
+          if(localStorage.getItem('role') == "USER"){
+            this.router.navigate(["user-home"]);
+          } else {
+            this.router.navigate(["business-home"]);
+          }
         },
         (err) => {
           console.log(err);
