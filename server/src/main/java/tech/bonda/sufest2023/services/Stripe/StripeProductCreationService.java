@@ -27,16 +27,16 @@ public class StripeProductCreationService {
      * @param data Product data including name, description, price, and image URL.
      * @return ResponseEntity indicating the result.
      */
-    public ResponseEntity<?> createProduct(ProductDto data) {
+    public String createProduct(ProductDto data) {
         try
         {
             Product product = createStripeProduct(data);
             System.out.println("Product ID: " + product.getId());
-            return ResponseEntity.ok("Product created");
+            return product.getId();
         } catch (Exception e)
         {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body("Error creating product");
+            return null;
         }
     }
 
@@ -44,7 +44,14 @@ public class StripeProductCreationService {
         Map<String, Object> params = new HashMap<>();
         params.put("name", data.getName());
         params.put("description", data.getDescription());
-        params.put("images", new String[]{DEFAULT_IMAGE_URL});
+        if (data.getImage() != null)
+        {
+            params.put("images", new String[]{data.getImage()});
+        }
+        else
+        {
+            params.put("images", new String[]{DEFAULT_IMAGE_URL});
+        }
         Product product = Product.create(params);
         createPriceForProduct(product.getId(), data.getPrice());
         return product;
@@ -66,7 +73,8 @@ public class StripeProductCreationService {
      * @return ResponseEntity indicating the result.
      */
     public ResponseEntity<?> createSession(List<String> productIds) {
-        try {
+        try
+        {
             Map<String, Long> productCount = countIds(productIds);
             List<SessionCreateParams.LineItem> lineItems = createLineItems(productCount);
 
@@ -75,7 +83,8 @@ public class StripeProductCreationService {
                     .setSuccessUrl("https://youtube.com/")
                     .setCancelUrl("https://chat.openai.com/");
 
-            for (SessionCreateParams.LineItem lineItem : lineItems) {
+            for (SessionCreateParams.LineItem lineItem : lineItems)
+            {
                 builder.addLineItem(lineItem);
             }
 
@@ -84,8 +93,9 @@ public class StripeProductCreationService {
             Session session = Session.create(params);
             System.out.println("Checkout session ID: " + session.getId());
             System.out.println("Checkout session Url: " + session.getUrl());
-            return ResponseEntity.ok("Session created");
-        } catch (StripeException e) {
+            return ResponseEntity.ok(session.getUrl());
+        } catch (StripeException e)
+        {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Error creating session");
         }
@@ -108,7 +118,8 @@ public class StripeProductCreationService {
     private Map<String, Long> countIds(List<String> ids) {
         Map<String, Long> nameCounts = new HashMap<>();
 
-        for (String name : ids) {
+        for (String name : ids)
+        {
             long count = nameCounts.getOrDefault(name, 0L);
             nameCounts.put(name, count + 1);
         }

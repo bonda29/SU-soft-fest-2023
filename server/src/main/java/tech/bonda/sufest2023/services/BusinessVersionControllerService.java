@@ -42,7 +42,12 @@ public class BusinessVersionControllerService {
                         .description(data.getDescription())
                         .price(data.getPrice())
                         .company(companyRepo.findById(data.getCompanyId()).get())
+                        .image(data.getImage())
                         .build();
+                //create product in stripe
+                String s =  stripeProductCreationService.createProduct(data);
+
+                product.setStripeId(s);
                 return ResponseEntity.ok(productRepo.save(product));
             }
         }

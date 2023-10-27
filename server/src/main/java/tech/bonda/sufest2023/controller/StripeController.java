@@ -15,14 +15,14 @@ import java.util.List;
 public class StripeController {
     private final StripeProductCreationService stripeProductCreationService;
 
-    @PostMapping("/createProduct")
+/*    @PostMapping("/createProduct")
     public ResponseEntity<?> createProduct(@RequestBody ProductDto data) {
         return stripeProductCreationService.createProduct(data);
-    }
+    }*/
 
     @PostMapping("/createSession")
     public ResponseEntity<?> createSession() {
-        List<String> productIds = List.of("price_1O5vmUJBrDD3W9P8zfLwqYrQ", "price_1O5vmUJBrDD3W9P8zfLwqYrQ", "price_1O5uNLJBrDD3W9P8nqScrCF3");
+        List<String> productIds = List.of("price_1O5xxRJBrDD3W9P8kErohdMj");
         return stripeProductCreationService.createSession(productIds);
     }
 
