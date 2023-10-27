@@ -1,5 +1,6 @@
 package tech.bonda.sufest2023;
 
+import com.stripe.Stripe;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,6 +15,8 @@ public class ServerApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ServerApplication.class, args);
+        Stripe.apiKey = "sk_test_51O5nGIJBrDD3W9P8k1Oqx58JvYMqX3kCLDUGFnf7xV5lwtUmpXVsFlXUfiZeCOphHLxFavnNMqAmQbdVXZu1x9Ux00mdkyiyak";
+
     }
 
     @Bean

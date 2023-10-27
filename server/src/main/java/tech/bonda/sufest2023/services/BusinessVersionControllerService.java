@@ -1,5 +1,6 @@
 package tech.bonda.sufest2023.services;
 
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,22 +8,21 @@ import tech.bonda.sufest2023.models.DTOs.ProductDto;
 import tech.bonda.sufest2023.models.Product;
 import tech.bonda.sufest2023.repository.CompanyRepo;
 import tech.bonda.sufest2023.repository.ProductRepo;
+import tech.bonda.sufest2023.services.Stripe.StripeProductCreationService;
 
 import java.util.Optional;
 
 @Service
 @Transactional
+@AllArgsConstructor
 public class BusinessVersionControllerService {
 
     private final CompanyRepo companyRepo;
 
     private final ProductRepo productRepo;
 
+    private final StripeProductCreationService stripeProductCreationService;
 
-    public BusinessVersionControllerService(CompanyRepo companyRepo, ProductRepo productRepo) {
-        this.companyRepo = companyRepo;
-        this.productRepo = productRepo;
-    }
 
     //add product to company
     public ResponseEntity<?> addProductToCompany(ProductDto data) {

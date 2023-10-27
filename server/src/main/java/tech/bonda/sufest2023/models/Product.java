@@ -4,9 +4,6 @@ package tech.bonda.sufest2023.models;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,6 +26,12 @@ public class Product {
 
     @Column(name = "price")
     Double price;
+
+    @Column(name = "image")
+    String image;
+
+    @Column(name = "stripe_id")
+    String stripeId;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "company_id", nullable = false)
