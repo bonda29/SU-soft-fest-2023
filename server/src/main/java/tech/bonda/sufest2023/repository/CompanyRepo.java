@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface CompanyRepo extends JpaRepository<Company, Integer> {
     Optional<Company> findByUsername(String username);
 
-    Optional<List<Company>> findAllByNameLike(String keyword);
+    Optional<List<Company>> findAllByNameContaining(String keyword);
 }

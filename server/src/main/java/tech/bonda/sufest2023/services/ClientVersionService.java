@@ -23,7 +23,7 @@ public class ClientVersionService {
     }
 
     public ResponseEntity<?> searchCompanyByKeyWord(String keyword) {
-        Optional<List<Company>> companies = companyRepo.findAllByNameLike(keyword);
+        Optional<List<Company>> companies = companyRepo.findAllByNameContaining(keyword);
         if (companies.isPresent())
         {
             return ResponseEntity.ok(companies.get());
