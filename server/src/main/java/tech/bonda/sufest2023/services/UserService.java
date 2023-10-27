@@ -1,22 +1,29 @@
-package tech.bonda.sufest2023.utils;
+package tech.bonda.sufest2023.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import tech.bonda.sufest2023.models.User;
 import tech.bonda.sufest2023.repository.UserRepo;
 
-import java.util.Optional;
-
 @Service
-public class CustomUserDetailsServiceUser implements UserDetailsService {
-    @Autowired
-    private UserRepo userRepo;
+public class UserService implements UserDetailsService {
+
+    @SuppressWarnings({"FieldCanBeLocal"})
+    private final PasswordEncoder encoder;
+
+    private final UserRepo userRepo;
+
+    public UserService(PasswordEncoder encoder, UserRepo userRepo) {
+        this.encoder = encoder;
+        this.userRepo = userRepo;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepo.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User is not valid"));
     }
+
 }
