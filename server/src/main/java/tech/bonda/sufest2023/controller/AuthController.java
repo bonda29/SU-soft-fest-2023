@@ -2,7 +2,7 @@ package tech.bonda.sufest2023.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tech.bonda.sufest2023.models.DTOs.UserDto;
+import tech.bonda.sufest2023.models.DTOs.RegisterDto;
 import tech.bonda.sufest2023.models.DTOs.UsernamePasswordDto;
 import tech.bonda.sufest2023.services.AuthenticationService;
 
@@ -18,7 +18,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody UserDto data) {
+    public ResponseEntity<?> registerUser(@RequestBody RegisterDto data) {
         return authenticationService.register(data);
     }
 

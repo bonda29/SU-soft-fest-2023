@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Set;
 
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,7 +16,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "Users", uniqueConstraints = {
-        @UniqueConstraint(name = "uc_user_username_phone_email", columnNames = {"username", "email", "phone"})
+        @UniqueConstraint(name = "uc_user_username_email", columnNames = {"username", "email"})
 })
 public class User implements UserDetails {
 
@@ -27,14 +28,14 @@ public class User implements UserDetails {
     @Column(name = "username", nullable = false)
     String username;
 
+    @Column(name = "name")
+    String name;
+
     @Column(name = "password", nullable = false)
     String password;
 
     @Column(name = "email")
     String email;
-
-    @Column(name = "phone")
-    String phone;
 
     @Column(name = "date_of_registration")
     String date_of_registration;
