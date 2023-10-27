@@ -1,5 +1,6 @@
 package tech.bonda.sufest2023.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.bonda.sufest2023.models.DTOs.ProductDto;
@@ -8,13 +9,10 @@ import tech.bonda.sufest2023.services.BusinessVersionControllerService;
 @RestController
 @RequestMapping("/businessVersion")
 @CrossOrigin("*")
+@AllArgsConstructor
 public class BusinessVersionController {
     private final BusinessVersionControllerService businessVersionControllerService;
 
-
-    public BusinessVersionController(BusinessVersionControllerService businessVersionControllerService) {
-        this.businessVersionControllerService = businessVersionControllerService;
-    }
 
     @GetMapping("/getProduct/{productId}")
     public ResponseEntity<?> getProduct(@PathVariable Integer productId) {

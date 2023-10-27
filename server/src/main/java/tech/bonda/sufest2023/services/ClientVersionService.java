@@ -1,5 +1,6 @@
 package tech.bonda.sufest2023.services;
 
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,15 +13,11 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@AllArgsConstructor
 public class ClientVersionService {
 
     private final CompanyRepo companyRepo;
     private final ProductRepo productRepo;
-
-    public ClientVersionService(CompanyRepo companyRepo, ProductRepo productRepo) {
-        this.companyRepo = companyRepo;
-        this.productRepo = productRepo;
-    }
 
     public ResponseEntity<?> searchCompanyByKeyWord(String keyword) {
         Optional<List<Company>> companies = companyRepo.findAllByNameContaining(keyword);

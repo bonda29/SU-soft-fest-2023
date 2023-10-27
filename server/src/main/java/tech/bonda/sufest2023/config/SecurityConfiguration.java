@@ -14,7 +14,6 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -24,6 +23,8 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import tech.bonda.sufest2023.utils.CustomUserDetailsServiceCompany;
+import tech.bonda.sufest2023.utils.CustomUserDetailsServiceUser;
 import tech.bonda.sufest2023.utils.RSAKeyProperties;
 
 @Configuration
@@ -40,12 +41,24 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
+    /*@Bean
     public AuthenticationManager authManager(UserDetailsService detailsService) {
         DaoAuthenticationProvider daoProvider = new DaoAuthenticationProvider();
         daoProvider.setUserDetailsService(detailsService);
         daoProvider.setPasswordEncoder(passwordEncoder());
         return new ProviderManager(daoProvider);
+    }*/
+    @Bean
+    public AuthenticationManager authManager(CustomUserDetailsServiceUser userDetailsServiceUser, CustomUserDetailsServiceCompany userDetailsServiceCompany) {
+        DaoAuthenticationProvider userProvider = new DaoAuthenticationProvider();
+        userProvider.setUserDetailsService(userDetailsServiceUser);
+        userProvider.setPasswordEncoder(passwordEncoder());
+
+        DaoAuthenticationProvider companyProvider = new DaoAuthenticationProvider();
+        companyProvider.setUserDetailsService(userDetailsServiceCompany);
+        companyProvider.setPasswordEncoder(passwordEncoder());
+
+        return new ProviderManager(userProvider, companyProvider);
     }
 
     @Bean
@@ -88,5 +101,4 @@ public class SecurityConfiguration {
         jwtConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
         return jwtConverter;
     }
-
 }

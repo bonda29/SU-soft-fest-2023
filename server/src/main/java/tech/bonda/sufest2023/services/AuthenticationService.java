@@ -119,7 +119,9 @@ public class AuthenticationService {
         try {
             auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(401).body("Invalid credentials");
+            e.printStackTrace();
+
+            return ResponseEntity.status(401).body("Invalid authentication");
         }
 
         Optional<?> objectOptional = (Optional<?>) loadObjectByUsername(username);
