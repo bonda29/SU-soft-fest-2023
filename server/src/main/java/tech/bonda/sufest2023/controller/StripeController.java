@@ -21,12 +21,12 @@ public class StripeController {
         return stripeProductCreationService.createProduct(data);
     }*/
 
-    @PostMapping("/createSession")
-    public ResponseEntity<?> createSession(@RequestBody List<Integer> data) {
-        return stripeProductCreationService.getStripeUrl(data);
-    }
+//    @PostMapping("/createSession")
+//    public ResponseEntity<?> createSession(@RequestBody List<Integer> data) {
+//        return stripeProductCreationService.getStripeUrl(data);
+//    }
 
-    @GetMapping("/test")
+    @PostMapping("/payment")
     public List<String> test(@RequestBody List<String> data) {
 
         List<Integer> intIds = data.stream()
