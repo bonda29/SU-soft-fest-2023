@@ -5,53 +5,53 @@ import com.stripe.model.Price;
 import com.stripe.model.Product;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.bonda.sufest2023.models.DTOs.ProductDto;
+import tech.bonda.sufest2023.repository.ProductRepo;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@AllArgsConstructor
 public class StripeProductCreationService {
-
     private static final String DEFAULT_IMAGE_URL = "https://yt3.ggpht.com/FYELqR3XE5tHW34BmJ4e9EjVkt7Aa3IKiHmhg2AEHudalaWtEPzLnaOfd8KzkGgPKbrH6ybhTg=s68-c-k-c0x00ffffff-no-rj";
+    private static final String SUCCESS_URL = "https://youtube.com/";
+    private static final String CANCEL_URL = "https://chat.openai.com/";
+    private static final String CURRENCY = "bgn";
 
-    /**
-     * Creates a product in Stripe.
-     *
-     * @param data Product data including name, description, price, and image URL.
-     * @return ResponseEntity indicating the result.
-     */
+    private final ProductRepo productRepo;
+
     public String createProduct(ProductDto data) {
         try
         {
             Product product = createStripeProduct(data);
-            System.out.println("Product ID: " + product.getId());
             return product.getId();
-        } catch (Exception e)
+        } catch (StripeException e)
         {
             e.printStackTrace();
             return null;
         }
     }
 
+    public ResponseEntity<?> getStripeUrl(List<Integer> dbId) {
+        List<String> stripeIds = dbIdToStripeId(dbId);
+        String url = createSession(stripeIds);
+        return (url != null) ? ResponseEntity.ok(url) : ResponseEntity.badRequest().body("Error creating session");
+    }
+
     private Product createStripeProduct(ProductDto data) throws StripeException {
         Map<String, Object> params = new HashMap<>();
         params.put("name", data.getName());
         params.put("description", data.getDescription());
-        if (data.getImage() != null)
-        {
-            params.put("images", new String[]{data.getImage()});
-        }
-        else
-        {
-            params.put("images", new String[]{DEFAULT_IMAGE_URL});
-        }
+        params.put("images", new String[]{data.getImage() != null ? data.getImage() : DEFAULT_IMAGE_URL});
         Product product = Product.create(params);
         createPriceForProduct(product.getId(), data.getPrice());
         return product;
@@ -59,20 +59,13 @@ public class StripeProductCreationService {
 
     private void createPriceForProduct(String productId, Double price) throws StripeException {
         Map<String, Object> priceData = new HashMap<>();
-        priceData.put("unit_amount", price.longValue() * 100);
-        priceData.put("currency", "bgn");
+        priceData.put("unit_amount", Math.round(price * 100));
+        priceData.put("currency", CURRENCY);
         priceData.put("product", productId);
         Price.create(priceData);
     }
 
-
-    /**
-     * Creates a checkout session in Stripe.
-     *
-     * @param productIds List of product IDs to add to the session.
-     * @return ResponseEntity indicating the result.
-     */
-    public ResponseEntity<?> createSession(List<String> productIds) {
+    private String createSession(List<String> productIds) {
         try
         {
             Map<String, Long> productCount = countIds(productIds);
@@ -80,8 +73,8 @@ public class StripeProductCreationService {
 
             SessionCreateParams.Builder builder = SessionCreateParams.builder()
                     .setMode(SessionCreateParams.Mode.PAYMENT)
-                    .setSuccessUrl("https://youtube.com/")
-                    .setCancelUrl("https://chat.openai.com/");
+                    .setSuccessUrl(SUCCESS_URL)
+                    .setCancelUrl(CANCEL_URL);
 
             for (SessionCreateParams.LineItem lineItem : lineItems)
             {
@@ -92,40 +85,40 @@ public class StripeProductCreationService {
 
             Session session = Session.create(params);
             System.out.println("Checkout session ID: " + session.getId());
-            System.out.println("Checkout session Url: " + session.getUrl());
-            return ResponseEntity.ok(session.getUrl());
+            System.out.println("Checkout session URL: " + session.getUrl());
+            return session.getUrl();
         } catch (StripeException e)
         {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body("Error creating session");
+            return null;
         }
     }
 
     private List<SessionCreateParams.LineItem> createLineItems(Map<String, Long> productCount) {
-        List<SessionCreateParams.LineItem> lineItems = new ArrayList<>();
-
-        productCount.forEach((id, quantity) -> {
-            SessionCreateParams.LineItem item = SessionCreateParams.LineItem.builder()
-                    .setPrice(id)
-                    .setQuantity(quantity)
-                    .build();
-            lineItems.add(item);
-        });
-
-        return lineItems;
+        return productCount.entrySet().stream()
+                .map(entry -> SessionCreateParams.LineItem.builder()
+                        .setPrice(entry.getKey())
+                        .setQuantity(entry.getValue())
+                        .build())
+                .collect(Collectors.toList());
     }
 
     private Map<String, Long> countIds(List<String> ids) {
         Map<String, Long> nameCounts = new HashMap<>();
 
-        for (String name : ids)
+        for (String id : ids)
         {
-            long count = nameCounts.getOrDefault(name, 0L);
-            nameCounts.put(name, count + 1);
+            nameCounts.put(id, nameCounts.getOrDefault(id, 0L) + 1);
         }
 
         return nameCounts;
     }
 
-
+    private List<String> dbIdToStripeId(List<Integer> dbId) {
+        return dbId.stream()
+                .map(id -> productRepo.findById(id).orElse(null))
+                .filter(Objects::nonNull)
+                .map(product -> product.getStripeId())
+                .collect(Collectors.toList());
+    }
 }

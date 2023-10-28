@@ -21,9 +21,8 @@ public class StripeController {
     }*/
 
     @PostMapping("/createSession")
-    public ResponseEntity<?> createSession() {
-        List<String> productIds = List.of("price_1O5xxRJBrDD3W9P8kErohdMj");
-        return stripeProductCreationService.createSession(productIds);
+    public ResponseEntity<?> createSession(List<Integer> data) {
+        return stripeProductCreationService.getStripeUrl(data);
     }
 
 }
