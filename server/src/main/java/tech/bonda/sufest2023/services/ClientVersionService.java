@@ -25,6 +25,7 @@ public class ClientVersionService {
             return ResponseEntity.ok(companyRepo.findAll());
         }
         Optional<List<Company>> companies = companyRepo.findAllByNameContaining(keyword);
+
         if (companies.isPresent())
         {
             return ResponseEntity.ok(companies.get());
