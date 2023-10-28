@@ -12,10 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tech.bonda.sufest2023.models.DTOs.ProductDto;
 import tech.bonda.sufest2023.repository.ProductRepo;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,7 +39,7 @@ public class StripeProductCreationService {
     }
 
     public ResponseEntity<?> getStripeUrl(List<Integer> dbId) {
-        List<String> stripeIds = dbIdToStripeId(dbId);
+        List<String> stripeIds = dbIdToStripePriceId(dbId);
         String url = createSession(stripeIds);
         return (url != null) ? ResponseEntity.ok(url) : ResponseEntity.badRequest().body("Error creating session");
     }
@@ -114,11 +111,35 @@ public class StripeProductCreationService {
         return nameCounts;
     }
 
-    private List<String> dbIdToStripeId(List<Integer> dbId) {
-        return dbId.stream()
-                .map(id -> productRepo.findById(id).orElse(null))
-                .filter(Objects::nonNull)
-                .map(product -> product.getStripeId())
-                .collect(Collectors.toList());
+    public List<String> dbIdToStripePriceId(List<Integer> dbIds) {
+        List<String> stripePriceIds = new ArrayList<>();
+
+
+        for (Integer dbId : dbIds) {
+            Optional<tech.bonda.sufest2023.models.Product> productOptional = productRepo.findById(dbId);
+            if (productOptional.isPresent()) {
+                tech.bonda.sufest2023.models.Product product = productOptional.get();
+
+                // Assuming each product has one associated price
+                String productId = product.getStripeId();
+
+                try {
+                    String priceId = retrievePriceIdForProduct(productId);
+                    stripePriceIds.add(priceId);
+                } catch (StripeException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return stripePriceIds;
+    }
+
+    private String retrievePriceIdForProduct(String productId) throws StripeException {
+        Map<String, Object> params = new HashMap<>();
+        params.put("product", productId);
+        Price price = Price.list(params).getData().get(0);
+        System.out.println("Price ID: " + price.getId());
+        return price.getId();
     }
 }

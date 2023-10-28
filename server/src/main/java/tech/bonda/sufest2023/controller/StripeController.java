@@ -21,8 +21,14 @@ public class StripeController {
     }*/
 
     @PostMapping("/createSession")
-    public ResponseEntity<?> createSession(List<Integer> data) {
+    public ResponseEntity<?> createSession(@RequestBody List<Integer> data) {
         return stripeProductCreationService.getStripeUrl(data);
+    }
+
+    @GetMapping("/test")
+    public List<String> test(@RequestBody List<Integer> data) {
+        return stripeProductCreationService.dbIdToStripePriceId(data);
+
     }
 
 }
