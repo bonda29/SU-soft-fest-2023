@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.bonda.sufest2023.models.AppProduct;
 import tech.bonda.sufest2023.models.DTOs.ProductDto;
 import tech.bonda.sufest2023.repository.ProductRepo;
 
@@ -116,12 +117,12 @@ public class StripeProductCreationService {
 
 
         for (Integer dbId : dbIds) {
-            Optional<tech.bonda.sufest2023.models.Product> productOptional = productRepo.findById(dbId);
+            Optional<AppProduct> productOptional = productRepo.findById(dbId);
             if (productOptional.isPresent()) {
-                tech.bonda.sufest2023.models.Product product = productOptional.get();
+                AppProduct appProduct = productOptional.get();
 
                 // Assuming each product has one associated price
-                String productId = product.getStripeId();
+                String productId = appProduct.getStripeId();
 
                 try {
                     String priceId = retrievePriceIdForProduct(productId);
@@ -135,11 +136,10 @@ public class StripeProductCreationService {
         return stripePriceIds;
     }
 
-    private String retrievePriceIdForProduct(String productId) throws StripeException {
+    public static String retrievePriceIdForProduct(String productId) throws StripeException {
         Map<String, Object> params = new HashMap<>();
         params.put("product", productId);
         Price price = Price.list(params).getData().get(0);
-        System.out.println("Price ID: " + price.getId());
         return price.getId();
     }
 }

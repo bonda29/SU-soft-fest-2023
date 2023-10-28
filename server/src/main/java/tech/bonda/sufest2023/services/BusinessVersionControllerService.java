@@ -1,16 +1,24 @@
 package tech.bonda.sufest2023.services;
 
+import com.stripe.exception.StripeException;
+import com.stripe.model.Price;
+import com.stripe.model.Product;
+import com.stripe.param.PriceCreateParams;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.bonda.sufest2023.models.AppProduct;
 import tech.bonda.sufest2023.models.DTOs.ProductDto;
-import tech.bonda.sufest2023.models.Product;
 import tech.bonda.sufest2023.repository.CompanyRepo;
 import tech.bonda.sufest2023.repository.ProductRepo;
 import tech.bonda.sufest2023.services.Stripe.StripeProductCreationService;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+
+import static tech.bonda.sufest2023.services.Stripe.StripeProductCreationService.retrievePriceIdForProduct;
 
 @Service
 @Transactional
@@ -37,7 +45,7 @@ public class BusinessVersionControllerService {
             else
             {
                 //product does not exist
-                Product product = Product.builder()
+                AppProduct appProduct = AppProduct.builder()
                         .name(data.getName())
                         .description(data.getDescription())
                         .price(data.getPrice())
@@ -45,10 +53,10 @@ public class BusinessVersionControllerService {
                         .image(data.getImage())
                         .build();
                 //create product in stripe
-                String s =  stripeProductCreationService.createProduct(data);
+                String s = stripeProductCreationService.createProduct(data);
 
-                product.setStripeId(s);
-                return ResponseEntity.ok(productRepo.save(product));
+                appProduct.setStripeId(s);
+                return ResponseEntity.ok(productRepo.save(appProduct));
             }
         }
         else
@@ -89,23 +97,60 @@ public class BusinessVersionControllerService {
     // Update product
     public ResponseEntity<?> updateProduct(Integer productId, ProductDto data) {
         // Check if the product with the given productId exists
-        Optional<Product> existingProduct = productRepo.findById(productId);
+        Optional<AppProduct> existingProduct = productRepo.findById(productId);
         if (existingProduct.isPresent())
         {
             // Update the existing product with the new data
-            Product productToUpdate = existingProduct.get();
-            productToUpdate.setName(data.getName());
-            productToUpdate.setDescription(data.getDescription());
-            productToUpdate.setPrice(data.getPrice());
+            AppProduct appProductToUpdate = existingProduct.get();
+            appProductToUpdate.setName(data.getName());
+            appProductToUpdate.setDescription(data.getDescription());
+            appProductToUpdate.setPrice(data.getPrice());
 
             // Save the updated product
-            Product updatedProduct = productRepo.save(productToUpdate);
-            return ResponseEntity.ok(updatedProduct);
+            String stripeId = productRepo.findById(productId).get().getStripeId();
+            AppProduct updatedAppProduct = productRepo.save(appProductToUpdate);
+            Long updatedPriceForStripe = Math.round(updatedAppProduct.getPrice() * 100);
+
+            try {
+                Product product = Product.retrieve(stripeId);
+
+                Map<String, Object> params = new HashMap<>();
+                params.put("name", updatedAppProduct.getName());
+                params.put("description", updatedAppProduct.getDescription());
+                params.put("images", updatedAppProduct.getImage());
+
+                Product updatedProduct = product.update(params);
+
+
+
+
+                Map<String, Object> priceParams = new HashMap<>();
+                priceParams.put("unit_amount", updatedPriceForStripe);
+                priceParams.put("currency", "bgn");
+                priceParams.put("product", stripeId);
+
+                Price price = Price.create(priceParams);
+                Product product2 = Product.retrieve(stripeId);
+
+                Map<String, Object> productUpdateParams = new HashMap<>();
+                productUpdateParams.put("default_price", price.getId());
+
+                product2.update(productUpdateParams);
+
+
+                System.out.println("Product updated successfully.");
+
+
+            } catch (StripeException e) {
+                e.printStackTrace();
+                // Handle any Stripe API exceptions here
+            }
+            return ResponseEntity.ok(updatedAppProduct);
         }
         else
         {
             // Product does not exist
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().body("Product with the given id does not exist");
         }
     }
 
@@ -113,15 +158,26 @@ public class BusinessVersionControllerService {
     public ResponseEntity<?> deleteProduct(Integer productId) {
         if (productRepo.findById(productId).isPresent())
         {
-            //product exists
-            productRepo.deleteById(productId);
-            return ResponseEntity.ok().build();
+            String stripeId = productRepo.findById(productId).get().getStripeId();
+            try
+            {
+                Product product = Product.retrieve(stripeId);
+                product.delete();
+                productRepo.deleteById(productId);
+                return ResponseEntity.ok().build();
+
+            } catch (StripeException e)
+            {
+                e.printStackTrace();
+                ResponseEntity.badRequest().body("Product could not be deleted");
+            }
+
         }
         else
         {
-            //product does not exist
             return ResponseEntity.notFound().build();
         }
+        return null;
     }
 
     //get all products

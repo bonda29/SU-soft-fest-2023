@@ -7,6 +7,7 @@ import tech.bonda.sufest2023.models.DTOs.ProductDto;
 import tech.bonda.sufest2023.services.Stripe.StripeProductCreationService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/stripe")
@@ -26,8 +27,13 @@ public class StripeController {
     }
 
     @GetMapping("/test")
-    public List<String> test(@RequestBody List<Integer> data) {
-        return stripeProductCreationService.dbIdToStripePriceId(data);
+    public List<String> test(@RequestBody List<String> data) {
+
+        List<Integer> intIds = data.stream()
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
+
+        return stripeProductCreationService.dbIdToStripePriceId(intIds);
 
     }
 
