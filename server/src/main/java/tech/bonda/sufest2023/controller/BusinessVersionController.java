@@ -14,6 +14,11 @@ public class BusinessVersionController {
     private final BusinessVersionControllerService businessVersionControllerService;
 
 
+    @PostMapping("/addProduct")
+    public ResponseEntity<?> addProductToCompany(@RequestBody ProductDto data) {
+        return businessVersionControllerService.addProductToCompany(data);
+    }
+
     @GetMapping("/getProduct/{productId}")
     public ResponseEntity<?> getProduct(@PathVariable Integer productId) {
         return businessVersionControllerService.getProduct(productId);
@@ -24,14 +29,9 @@ public class BusinessVersionController {
         return businessVersionControllerService.getAllProductsOfCompany(companyId);
     }
 
-    @PostMapping("/addProduct")
-    public ResponseEntity<?> addProductToCompany(@RequestBody ProductDto data) {
-        return businessVersionControllerService.addProductToCompany(data);
-    }
-
-    @DeleteMapping("/deleteProduct/{productId}")
-    public ResponseEntity<?> deleteProduct(@PathVariable Integer productId) {
-        return businessVersionControllerService.deleteProduct(productId);
+    @GetMapping("/getAllProducts")
+    public ResponseEntity<?> getAllProducts() {
+        return businessVersionControllerService.getAllProducts();
     }
 
     @PutMapping("/updateProduct/{productId}")
@@ -39,9 +39,8 @@ public class BusinessVersionController {
         return businessVersionControllerService.updateProduct(productId, data);
     }
 
-    @GetMapping("/getAllProducts")
-    public ResponseEntity<?> getAllProducts() {
-        return businessVersionControllerService.getAllProducts();
+    @DeleteMapping("/deleteProduct/{productId}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Integer productId) {
+        return businessVersionControllerService.deleteProduct(productId);
     }
-
 }

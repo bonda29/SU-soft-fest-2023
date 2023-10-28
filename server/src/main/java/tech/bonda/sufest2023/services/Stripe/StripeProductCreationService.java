@@ -1,5 +1,7 @@
 package tech.bonda.sufest2023.services.Stripe;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Price;
 import com.stripe.model.Product;
@@ -42,7 +44,9 @@ public class StripeProductCreationService {
     public ResponseEntity<?> getStripeUrl(List<Integer> dbId) {
         List<String> stripeIds = dbIdToStripePriceId(dbId);
         String url = createSession(stripeIds);
-        return (url != null) ? ResponseEntity.ok(url) : ResponseEntity.badRequest().body("Error creating session");
+        ObjectNode objectNode = new ObjectMapper().createObjectNode();
+        objectNode.put("url", url);
+        return ResponseEntity.ok(objectNode);
     }
 
     private Product createStripeProduct(ProductDto data) throws StripeException {
