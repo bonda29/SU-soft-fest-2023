@@ -108,16 +108,24 @@ public class ForgotPasswordService {
         String passwordFromDB = codeSentToMailRepository.findByEmail(email).get().getCode();
         if (passwordFromDB.equals(passwordSendToEmail))
         {
-            User user = userRepo.findByEmail(email).get();
-            user.setPassword(passwordEncoder.encode(newPassword));
-            userRepo.updatePassword(user.getId(), user.getPassword());
-            codeSentToMailRepository.deleteByEmail(email);
-            System.out.println("Password changed successfully;");
+            Object object = loadObjectByEmail(email);
+            if (object instanceof User user)
+            {
+                user.setPassword(passwordEncoder.encode(newPassword));
+                userRepo.updatePassword(user.getId(), user.getPassword());
+                codeSentToMailRepository.deleteByEmail(email);
+            }
+            else if (object instanceof Company company)
+            {
+                company.setPassword(passwordEncoder.encode(newPassword));
+                companyRepo.updatePassword(company.getId(), company.getPassword());
+                codeSentToMailRepository.deleteByEmail(email);
+            }
             return ResponseEntity.ok().body("Password changed successfully");
         }
         else
         {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password is incorrect");
+            return ResponseEntity.badRequest().body("Password is incorrect");
         }
     }
 

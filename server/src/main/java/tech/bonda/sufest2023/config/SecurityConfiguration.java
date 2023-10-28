@@ -64,7 +64,11 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(auth -> {  //http.csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth -> {
-            auth.requestMatchers("/**").permitAll();
+//            auth.requestMatchers("/**").permitAll();
+            auth.requestMatchers("/auth/**").permitAll();
+            auth.requestMatchers("/clientVersion/**").hasRole("USER");
+            auth.requestMatchers("/businessVersion/**").hasRole("COMPANY");
+            auth.requestMatchers("/payment/**").hasRole("USER");
 //            auth.requestMatchers("/admin/**").hasRole("ADMIN");
 //            auth.requestMatchers("/user/**").hasAnyRole("ADMIN", "USER");
 //            auth.requestMatchers("/password/**").permitAll();

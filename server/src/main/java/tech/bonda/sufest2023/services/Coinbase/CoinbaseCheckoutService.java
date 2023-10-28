@@ -34,7 +34,12 @@ public class CoinbaseCheckoutService {
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
         MediaType mediaType = MediaType.parse("application/json");
-        RequestBody body = RequestBody.create(mediaType,"{\"name\":\"Payment\",\"pricing_type\":\"fixed_price\",\"description\":\"You were automatically redirected to Coinbase to pay: " + PRICE + " for the items you have selected \",\"local_price\":{\"amount\": " + PRICE + ",\"currency\":\"bgn\"},\"redirect_url\":\"https://www.youtube.com/\",\"cancel_url\":\"https://chat.openai.com/\"}");
+        RequestBody body = RequestBody.create(mediaType, "{\"name\":\"Payment\"," +
+                "\"pricing_type\":\"fixed_price\"," +
+                "\"description\":\"You were automatically redirected to Coinbase to pay: " + PRICE + " for the items you have selected \"," +
+                "\"local_price\":{\"amount\": " + PRICE + "," +
+                "\"currency\":\"bgn\"},\"redirect_url\":\"https://www.youtube.com/\"," +
+                "\"cancel_url\":\"https://chat.openai.com/\"}");
         Request request = new Request.Builder()
                 .url("https://api.commerce.coinbase.com/charges")
                 .method("POST", body)

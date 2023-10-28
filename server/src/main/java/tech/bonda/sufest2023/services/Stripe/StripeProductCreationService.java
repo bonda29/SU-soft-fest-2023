@@ -61,7 +61,7 @@ public class StripeProductCreationService {
 
     private void createPriceForProduct(String productId, Double price) throws StripeException {
         Map<String, Object> priceData = new HashMap<>();
-        priceData.put("unit_amount", Math.round(price * 100));
+        priceData.put("unit_amount", price * 100);
         priceData.put("currency", CURRENCY);
         priceData.put("product", productId);
         Price.create(priceData);

@@ -6,6 +6,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 
@@ -41,10 +43,20 @@ public class User implements UserDetails {
     String date_of_registration;
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "bookmarks",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "product_id")})
+    private Set<AppProduct> bookmarks;
+
+
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "role_user_junction",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private Set<Role> authorities;
+
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

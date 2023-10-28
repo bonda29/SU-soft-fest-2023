@@ -36,6 +36,4 @@ public class AppProduct {
     @ManyToOne(optional = false)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
-
-
 }
