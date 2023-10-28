@@ -3,7 +3,6 @@ package tech.bonda.sufest2023.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tech.bonda.sufest2023.models.DTOs.ProductDto;
 import tech.bonda.sufest2023.services.Stripe.StripeProductCreationService;
 
 import java.util.List;
@@ -27,13 +26,13 @@ public class StripeController {
 //    }
 
     @PostMapping("/payment")
-    public List<String> test(@RequestBody List<String> data) {
+    public ResponseEntity<?> test(@RequestBody List<String> data) {
 
         List<Integer> intIds = data.stream()
                 .map(Integer::parseInt)
                 .collect(Collectors.toList());
 
-        return stripeProductCreationService.dbIdToStripePriceId(intIds);
+        return stripeProductCreationService.getStripeUrl(intIds);
 
     }
 
