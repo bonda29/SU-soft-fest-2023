@@ -17,9 +17,9 @@ import java.util.stream.Collectors;
 public class PaymentController {
     private final StripeProductCreationService stripeProductCreationService;
     private final CoinbaseCheckoutService coinbaseCheckoutService;
-    @PostMapping("/stripe")
-    public ResponseEntity<?> test(@RequestBody List<String> data) {
 
+    @PostMapping("/stripe")
+    public ResponseEntity<?> createStripePayment(@RequestBody List<String> data) {
         List<Integer> intIds = data.stream()
                 .map(Integer::parseInt)
                 .collect(Collectors.toList());
@@ -28,20 +28,15 @@ public class PaymentController {
     }
 
     @PostMapping("/coinbase")
-    public ResponseEntity<?> test2(@RequestBody List<String> data) {
-
+    public ResponseEntity<?> createCoinbasePayment(@RequestBody List<String> data) {
         List<Integer> intIds = data.stream()
                 .map(Integer::parseInt)
                 .collect(Collectors.toList());
 
-        try
-        {
+        try {
             return coinbaseCheckoutService.createCheckout(intIds);
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-
-
 }

@@ -13,33 +13,32 @@ import tech.bonda.sufest2023.services.BusinessVersionControllerService;
 public class BusinessVersionController {
     private final BusinessVersionControllerService businessVersionControllerService;
 
-
-    @PostMapping("/addProduct")
-    public ResponseEntity<?> addProductToCompany(@RequestBody ProductDto data) {
+    @PostMapping("/products")
+    public ResponseEntity<?> addProduct(@RequestBody ProductDto data) {
         return businessVersionControllerService.addProductToCompany(data);
     }
 
-    @GetMapping("/getProduct/{productId}")
-    public ResponseEntity<?> getProduct(@PathVariable Integer productId) {
+    @GetMapping("/product/{productId}")
+    public ResponseEntity<?> getProductById(@PathVariable Integer productId) {
         return businessVersionControllerService.getProduct(productId);
     }
 
-    @GetMapping("/getAll/{companyId}")
-    public ResponseEntity<?> getAllProductsOfCompany(@PathVariable Integer companyId) {
+    @GetMapping("/products/{companyId}")
+    public ResponseEntity<?> getProductsByCompanyId(@PathVariable Integer companyId) {
         return businessVersionControllerService.getAllProductsOfCompany(companyId);
     }
 
-    @GetMapping("/getAllProducts")
+    @GetMapping("/products")
     public ResponseEntity<?> getAllProducts() {
         return businessVersionControllerService.getAllProducts();
     }
 
-    @PutMapping("/updateProduct/{productId}")
+    @PutMapping("/product/{productId}")
     public ResponseEntity<?> updateProduct(@PathVariable Integer productId, @RequestBody ProductDto data) {
         return businessVersionControllerService.updateProduct(productId, data);
     }
 
-    @DeleteMapping("/deleteProduct/{productId}")
+    @DeleteMapping("/product/{productId}")
     public ResponseEntity<?> deleteProduct(@PathVariable Integer productId) {
         return businessVersionControllerService.deleteProduct(productId);
     }

@@ -18,16 +18,15 @@ import tech.bonda.sufest2023.services.ForgotPasswordService;
 public class AuthController {
 
     private final AuthenticationService authenticationService;
-    private ForgotPasswordService forgotPasswordService;
-
+    private final ForgotPasswordService forgotPasswordService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody RegisterDto data) {
+    public ResponseEntity<?> register(@RequestBody RegisterDto data) {
         return authenticationService.register(data);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody UsernamePasswordDto data) {
+    public ResponseEntity<?> login(@RequestBody UsernamePasswordDto data) {
         return authenticationService.login(data);
     }
 

@@ -106,13 +106,25 @@ public class ForgotPasswordService {
         String newPassword = data.getNewPassword();
 
         String passwordFromDB = codeSentToMailRepository.findByEmail(email).get().getCode();
+        Object object = loadObjectByEmail(email);
+        if (object == null)
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email is incorrect");
+        }
         if (passwordFromDB.equals(passwordSendToEmail))
         {
-            User user = userRepo.findByEmail(email).get();
-            user.setPassword(passwordEncoder.encode(newPassword));
-            userRepo.updatePassword(user.getId(), user.getPassword());
-            codeSentToMailRepository.deleteByEmail(email);
-            System.out.println("Password changed successfully;");
+            if (object instanceof Company)
+            {
+                Company company = companyRepo.findByEmail(email).get();
+                company.setPassword(passwordEncoder.encode(newPassword));
+                companyRepo.updatePassword(company.getId(), company.getPassword());
+            }
+            else
+            {
+                User user = userRepo.findByEmail(email).get();
+                user.setPassword(passwordEncoder.encode(newPassword));
+                userRepo.updatePassword(user.getId(), user.getPassword());
+            }
             return ResponseEntity.ok().body("Password changed successfully");
         }
         else
@@ -140,7 +152,4 @@ public class ForgotPasswordService {
 
         return null;
     }
-
-
-
 }

@@ -20,7 +20,7 @@ public class ClientVersionService {
     private final ProductRepo productRepo;
 
     public ResponseEntity<?> searchCompanyByKeyWord(String keyword) {
-        if (keyword == null || keyword == "")
+        if (keyword.equals(":all"))
         {
             return ResponseEntity.ok(companyRepo.findAll());
         }

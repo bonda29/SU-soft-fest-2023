@@ -18,71 +18,63 @@ import java.util.Optional;
 public class BookmarksService {
     private final UserRepo userRepo;
 
-    public ResponseEntity<?> saveBookmark(Integer id, Integer newBookmark) {
-        String bookmarks = userRepo.findById(id).get().getBookmarks();
-
-        if (bookmarks == null)
-        {
-            bookmarks = "" + newBookmark;
+    public ResponseEntity<?> saveBookmark(Integer userId, Integer newBookmark) {
+        User user = userRepo.findById(userId).orElse(null);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User with ID " + userId + " does not exist.");
         }
-        else
-        {
+
+        String bookmarks = user.getBookmarks();
+        if (bookmarks == null) {
+            bookmarks = String.valueOf(newBookmark);
+        } else {
             bookmarks += "," + newBookmark;
         }
-        userRepo.findById(id).get().setBookmarks(bookmarks);
-        return ResponseEntity.ok().body("Bookmarked successfully created");
+
+        user.setBookmarks(bookmarks);
+        userRepo.save(user);
+
+        return ResponseEntity.ok().body("Bookmark successfully created");
     }
 
-    public ResponseEntity<?> getBookmarks(Integer id) {
-        String bookmarks = userRepo.findById(id).get().getBookmarks();
-
-        if (bookmarks == null)
-        {
-            return ResponseEntity.badRequest().body("No bookmarks for user with id " + id);
+    public ResponseEntity<?> getBookmarks(Integer userId) {
+        User user = userRepo.findById(userId).orElse(null);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User with ID " + userId + " does not exist.");
         }
-        else
-        {
+
+        String bookmarks = user.getBookmarks();
+        if (bookmarks == null) {
+            return ResponseEntity.ok().body(new ArrayList<>());
+        } else {
             List<String> bookmarksList = List.of(bookmarks.split(","));
             return ResponseEntity.ok().body(bookmarksList);
         }
     }
 
     public ResponseEntity<?> deleteBookmark(Integer userId, Integer bookmarkToDelete) {
-        // Retrieve the user by their ID
-        Optional<User> userOptional = userRepo.findById(userId);
-        if (userOptional.isEmpty())
-        {
+        User user = userRepo.findById(userId).orElse(null);
+        if (user == null) {
             return ResponseEntity.badRequest().body("User with ID " + userId + " does not exist.");
         }
 
-        User user = userOptional.get();
         String bookmarks = user.getBookmarks();
-
-        if (bookmarks == null || bookmarks.isEmpty())
-        {
+        if (bookmarks == null || bookmarks.isEmpty()) {
             return ResponseEntity.badRequest().body("No bookmarks for user with ID " + userId);
         }
-        else
-        {
-            List<String> bookmarksList = new ArrayList<>(Arrays.asList(bookmarks.split(",")));
-            String bookmarkToDeleteStr = String.valueOf(bookmarkToDelete);
 
-            if (bookmarksList.contains(bookmarkToDeleteStr))
-            {
-                bookmarksList.remove(bookmarkToDeleteStr);
+        List<String> bookmarksList = new ArrayList<>(Arrays.asList(bookmarks.split(",")));
+        String bookmarkToDeleteStr = String.valueOf(bookmarkToDelete);
 
-                // Update the user's bookmarks
-                user.setBookmarks(String.join(",", bookmarksList));
-                userRepo.save(user);
+        if (bookmarksList.contains(bookmarkToDeleteStr)) {
+            bookmarksList.remove(bookmarkToDeleteStr);
 
-                return ResponseEntity.ok().body("Bookmark deleted successfully");
-            }
-            else
-            {
-                return ResponseEntity.badRequest().body("Bookmark " + bookmarkToDelete + " does not exist for user with ID " + userId);
-            }
+            user.setBookmarks(String.join(",", bookmarksList));
+            userRepo.save(user);
+
+            return ResponseEntity.ok().body("Bookmark deleted successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Bookmark " + bookmarkToDelete + " does not exist for user with ID " + userId);
         }
     }
-
-
 }

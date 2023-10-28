@@ -13,27 +13,25 @@ import tech.bonda.sufest2023.services.ClientVersionService;
 public class ClientVersionController {
 
     private final ClientVersionService clientVersionService;
-
     private final BookmarksService bookmarksService;
 
-    @GetMapping("/searchCompany/{keyword}")
-    public ResponseEntity<?> searchCompanyByKeyWord(@PathVariable String keyword) {
-        System.out.println("keyword = " + keyword);
+    @GetMapping("/companies/{keyword}")
+    public ResponseEntity<?> searchCompaniesByKeyword(@PathVariable String keyword) {
         return clientVersionService.searchCompanyByKeyWord(keyword);
     }
 
-    @PostMapping("/bookmark/{id}")
-    public ResponseEntity<?> saveBookmark(@PathVariable Integer id, @RequestBody String bookmark) {
-        return bookmarksService.saveBookmark(id, Integer.valueOf(bookmark));
+    @PostMapping("/bookmark/{userId}")
+    public ResponseEntity<?> saveBookmark(@PathVariable Integer userId, @RequestBody String bookmark) {
+        return bookmarksService.saveBookmark(userId, Integer.valueOf(bookmark));
     }
 
-    @GetMapping("/getBookmarks/{id}")
-    public ResponseEntity<?> getBookmarks(@PathVariable Integer id) {
-        return bookmarksService.getBookmarks(id);
+    @GetMapping("/bookmarks/{userId}")
+    public ResponseEntity<?> getBookmarks(@PathVariable Integer userId) {
+        return bookmarksService.getBookmarks(userId);
     }
 
-    @DeleteMapping("/deleteBookmark/{id}/{bookmarkToDelete}")
-    public ResponseEntity<?> deleteBookmark(@PathVariable Integer id, @PathVariable String bookmarkToDelete) {
-        return bookmarksService.deleteBookmark(id, Integer.valueOf(bookmarkToDelete));
+    @DeleteMapping("/bookmarks/{userId}/{bookmarkId}")
+    public ResponseEntity<?> deleteBookmark(@PathVariable Integer userId, @PathVariable String bookmarkId) {
+        return bookmarksService.deleteBookmark(userId, Integer.valueOf(bookmarkId));
     }
 }
