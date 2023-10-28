@@ -41,13 +41,6 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
-    /*@Bean
-    public AuthenticationManager authManager(UserDetailsService detailsService) {
-        DaoAuthenticationProvider daoProvider = new DaoAuthenticationProvider();
-        daoProvider.setUserDetailsService(detailsService);
-        daoProvider.setPasswordEncoder(passwordEncoder());
-        return new ProviderManager(daoProvider);
-    }*/
     @Bean
     public AuthenticationManager authManager(CustomUserDetailsServiceUser userDetailsServiceUser, CustomUserDetailsServiceCompany userDetailsServiceCompany) {
         DaoAuthenticationProvider userProvider = new DaoAuthenticationProvider();
@@ -61,6 +54,7 @@ public class SecurityConfiguration {
         return new ProviderManager(userProvider, companyProvider);
     }
 
+    @SuppressWarnings("removal")
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -75,7 +69,6 @@ public class SecurityConfiguration {
                     auth.anyRequest().authenticated();
                 });
 
-        //noinspection removal
         http.oauth2ResourceServer().jwt().jwtAuthenticationConverter(jwtAuthenticationConverter());
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

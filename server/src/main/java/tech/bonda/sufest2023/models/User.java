@@ -40,6 +40,9 @@ public class User implements UserDetails {
     @Column(name = "date_of_registration")
     String date_of_registration;
 
+    @Column(name = "bookmarks")
+    private String bookmarks;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "role_user_junction",
             joinColumns = {@JoinColumn(name = "user_id")},
