@@ -60,9 +60,14 @@ public class AuthenticationService {
     }
 
     public ResponseEntity<?> register(RegisterDto data) {
+
+        if (!data.getPassword().equals(data.getRepeatPassword()))
+        {
+            return ResponseEntity.badRequest().body("Passwords don't match!");
+        }
         if (loadObjectByUsername(data.getUsername()) != null)
         {
-            return ResponseEntity.status(400).body("Username is already taken");
+            return ResponseEntity.status(400).body("Username is already taken!");
         }
 /*        if (!isPasswordStrong(data.getPassword()))
         {
@@ -121,12 +126,12 @@ public class AuthenticationService {
         } catch (AuthenticationException e) {
             e.printStackTrace();
 
-            return ResponseEntity.status(401).body("Invalid authentication");
+            return ResponseEntity.status(401).body("Invalid credentials!");
         }
 
         Optional<?> objectOptional = (Optional<?>) loadObjectByUsername(username);
         if (objectOptional.isEmpty()) {
-            return ResponseEntity.status(401).body("Invalid credentials");
+            return ResponseEntity.status(401).body("Invalid credentials!");
         }
 
         Object object = objectOptional.get();

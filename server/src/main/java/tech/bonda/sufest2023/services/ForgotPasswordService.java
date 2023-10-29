@@ -63,6 +63,12 @@ public class ForgotPasswordService {
     }
 
     public ResponseEntity<String> sendEmailWithTemplate(EmailDTO emailDTO) {
+        Object object = loadObjectByEmail(emailDTO.getTo());
+        if (object == null)
+        {
+            return ResponseEntity.badRequest().body("Email is not present!");
+        }
+
         CodeSentToMail codeSentToMail = new CodeSentToMail();
 
         codeSentToMail.setEmail(emailDTO.getTo());
@@ -101,6 +107,8 @@ public class ForgotPasswordService {
 
     public ResponseEntity<String> forgotPassword(ForgotPasswordDTO data) {
 
+
+
         String email = data.getEmail();
         String passwordSendToEmail = data.getPasswordSendToEmail();
         String newPassword = data.getNewPassword();
@@ -109,10 +117,14 @@ public class ForgotPasswordService {
         Object object = loadObjectByEmail(email);
         if (object == null)
         {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email is incorrect");
+            return ResponseEntity.badRequest().body("Email is incorrect!");
         }
         if (passwordFromDB.equals(passwordSendToEmail))
         {
+            if (!data.getNewPassword().equals(data.getRepeatPassword()))
+            {
+                return ResponseEntity.badRequest().body("Passwords don't match!");
+            }
             if (object instanceof Company)
             {
                 Company company = companyRepo.findByEmail(email).get();
@@ -125,11 +137,11 @@ public class ForgotPasswordService {
                 user.setPassword(passwordEncoder.encode(newPassword));
                 userRepo.updatePassword(user.getId(), user.getPassword());
             }
-            return ResponseEntity.ok().body("Password changed successfully");
+            return ResponseEntity.ok().body("Password changed successfully!");
         }
         else
         {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password is incorrect");
+            return ResponseEntity.badRequest().body("The code is incorrect!");
         }
     }
 

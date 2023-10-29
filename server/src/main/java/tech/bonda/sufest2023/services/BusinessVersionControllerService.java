@@ -55,7 +55,23 @@ public class BusinessVersionControllerService {
         {
             if (productRepo.findByName(data.getName()).isPresent())
             {
-                return ResponseEntity.badRequest().body("Product with this name already exists");
+                return ResponseEntity.badRequest().body("Product with this name already exists!");
+            }
+            else if (data.getName() == null || data.getName().isEmpty())
+            {
+                return ResponseEntity.badRequest().body("Product name is required!");
+            }
+            else if (data.getDescription() == null || data.getDescription().isEmpty())
+            {
+                return ResponseEntity.badRequest().body("Product description is required!");
+            }
+            else if (data.getPrice() == null)
+            {
+                return ResponseEntity.badRequest().body("Product price is required!");
+            }
+            else if (data.getPrice()<=0)
+            {
+                return ResponseEntity.badRequest().body("Invalid price!");
             }
             else
             {
@@ -75,7 +91,7 @@ public class BusinessVersionControllerService {
         }
         else
         {
-            return ResponseEntity.badRequest().body("Company with this id does not exist");
+            return ResponseEntity.badRequest().body("Company with this id does not exist!");
         }
     }
 

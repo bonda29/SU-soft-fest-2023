@@ -9,4 +9,5 @@ public class ForgotPasswordDTO implements Serializable {
     String email;
     String passwordSendToEmail;
     String newPassword;
+    String repeatPassword;
 }

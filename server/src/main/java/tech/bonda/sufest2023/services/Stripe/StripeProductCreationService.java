@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class StripeProductCreationService {
     private static final String DEFAULT_IMAGE_URL = "https://yt3.ggpht.com/FYELqR3XE5tHW34BmJ4e9EjVkt7Aa3IKiHmhg2AEHudalaWtEPzLnaOfd8KzkGgPKbrH6ybhTg=s68-c-k-c0x00ffffff-no-rj";
-    private static final String SUCCESS_URL = "https://youtube.com/";
-    private static final String CANCEL_URL = "https://chat.openai.com/";
+    private static final String SUCCESS_URL = "http://localhost:4200/customer-home";
+    private static final String CANCEL_URL = "http://localhost:4200/customer-home";
     private static final String CURRENCY = "bgn";
 
     private final ProductRepo productRepo;

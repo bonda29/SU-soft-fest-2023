@@ -10,5 +10,6 @@ public class RegisterDto implements Serializable {
     String name;
     String email;
     String password;
+    String repeatPassword;
     String role;
 }
