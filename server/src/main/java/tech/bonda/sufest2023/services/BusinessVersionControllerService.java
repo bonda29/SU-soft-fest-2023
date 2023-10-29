@@ -3,8 +3,8 @@ package tech.bonda.sufest2023.services;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Price;
 import com.stripe.model.Product;
+import com.stripe.param.ProductUpdateParams;
 import lombok.AllArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +29,26 @@ public class BusinessVersionControllerService {
 
     private final StripeProductCreationService stripeProductCreationService;
 
+    private static AppProduct updateAppProduct(ProductDto data, Optional<AppProduct> existingProduct) {
+        AppProduct appProductToUpdate = existingProduct.get();
+        if (data.getName() != null)
+        {
+            appProductToUpdate.setName(data.getName());
+        }
+        if (data.getDescription() != null)
+        {
+            appProductToUpdate.setDescription(data.getDescription());
+        }
+        if (data.getPrice() != null)
+        {
+            appProductToUpdate.setPrice(data.getPrice());
+        }
+        if (data.getImage() != null)
+        {
+            appProductToUpdate.setImage(data.getImage());
+        }
+        return appProductToUpdate;
+    }
 
     public ResponseEntity<?> addProductToCompany(ProductDto data) {
         if (companyRepo.findById(data.getCompanyId()).isPresent())
@@ -88,9 +108,16 @@ public class BusinessVersionControllerService {
             try
             {
                 Product product = Product.retrieve(stripeId);
-                product.delete();
+                Product updatedProduct = product.update(
+                        ProductUpdateParams.builder()
+                                .setActive(false)
+                                .build()
+                );
+                //product.delete();
+
+
                 productRepo.deleteById(productId);
-                return ResponseEntity.ok().build();
+                return ResponseEntity.ok().body("Product deleted successfully");
             } catch (StripeException e)
             {
                 e.printStackTrace();
@@ -155,22 +182,5 @@ public class BusinessVersionControllerService {
 
     public ResponseEntity<?> getAllProducts() {
         return ResponseEntity.ok(productRepo.findAll());
-    }
-
-    private static AppProduct updateAppProduct(ProductDto data, Optional<AppProduct> existingProduct) {
-        AppProduct appProductToUpdate = existingProduct.get();
-        if (data.getName() != null) {
-            appProductToUpdate.setName(data.getName());
-        }
-        if (data.getDescription() != null) {
-            appProductToUpdate.setDescription(data.getDescription());
-        }
-        if (data.getPrice() != null) {
-            appProductToUpdate.setPrice(data.getPrice());
-        }
-        if (data.getImage() != null) {
-            appProductToUpdate.setImage(data.getImage());
-        }
-        return appProductToUpdate;
     }
 }
