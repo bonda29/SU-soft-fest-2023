@@ -112,8 +112,8 @@ public class BusinessVersionControllerService {
 
             String stripeId = productRepo.findById(productId).get().getStripeId();
             AppProduct updatedAppProduct = productRepo.save(appProductToUpdate);
-
             Long updatedPriceForStripe = Math.round(updatedAppProduct.getPrice() * 100);
+
 
             try
             {
@@ -122,7 +122,7 @@ public class BusinessVersionControllerService {
                 Map<String, Object> params = new HashMap<>();
                 params.put("name", updatedAppProduct.getName());
                 params.put("description", updatedAppProduct.getDescription());
-                params.put("images", updatedAppProduct.getImage());
+//                params.put("images", updatedAppProduct.getImage());
 
                 Product updatedProduct = product.update(params);
 
