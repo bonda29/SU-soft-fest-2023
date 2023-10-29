@@ -1,0 +1,37 @@
+<form [formGroup]="registerForm" (ngSubmit)="handleSubmit()">
+    <h2>Create an account</h2>
+
+    <label *ngIf="selectedRole=='client'" for="nameSur" class="form-control">Name and Surname</label>
+    <input *ngIf="selectedRole=='client'" name="nameSur" type="text" formControlName="nameSur">
+
+    <label *ngIf="selectedRole=='company'" for="company" class="form-control">Company Name</label>
+    <input *ngIf="selectedRole=='company'" name="company" type="text" formControlName="company">
+
+    <label for="username" class="form-control">Username</label>
+    <input name="username" type="text" formControlName="username">
+
+    <label for="email" class="form-control">Email</label>
+    <input name="email" type="email" formControlName="email">
+
+    <label for="password" class="form-control">Password</label>
+    <input #pass name="password" type="password" formControlName="password">
+    <i *ngIf="passVisible" class="fa fa-eye-slash" (click)="changeVisibilityPass(pass)"></i>
+    <i *ngIf="!passVisible" class="far fa-eye" id="togglePassword" (click)="changeVisibilityPass(pass)"></i>
+
+    <label for="rePassword" class="form-control" class="fix">Repeat Password</label>
+    <input #repass name="rePassword" type="password" formControlName="rePassword">
+    <i *ngIf="repassVisible" class="fa fa-eye-slash" (click)="changeVisibilityRepass(repass)"></i>
+    <i *ngIf="!repassVisible" class="far fa-eye" id="togglePassword" (click)="changeVisibilityRepass(repass)"></i>
+
+    <label for="role" class="fix">Choose role</label>
+    <select name="role" (change)="onRoleChange()" formControlName="role">
+        <option [defaultSelected]="true" value="client">Client</option>
+        <option value="company">Company</option>
+    </select>
+
+    <input type="submit" class="submit">
+
+    <p class="have">Already have an account? <a routerLink="/login">Login</a></p>
+
+    <p class="error">{{errorMessage}}</p>
+</form>

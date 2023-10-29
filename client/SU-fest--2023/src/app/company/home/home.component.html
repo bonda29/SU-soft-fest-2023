@@ -1,0 +1,38 @@
+<header>
+    <div class="logo" routerLink="/">
+        <img class="a" src="assets/logo.png" alt="LOGO">
+        <img class="b" src="assets/logoWhite.png" alt="LOGO">
+        <img class="small" src="assets/logoSmall.png" alt="">
+    </div>
+
+    <div class="add">
+        <button routerLink="/business-add">Add listing</button>
+    </div>
+</header>
+
+<div class="wrapper">
+    <main>
+        <h2 *ngIf="noListings">No listings</h2>
+        <a *ngFor="let listing of listings" routerLink="/business-details/{{listing.id}}">
+            <div class="listing">
+                <img src="{{listing.image}}" alt="">
+
+                <div class="content">
+                    <div class = "top">
+                        <div class="left">
+                            <h2>{{listing.name}}</h2>
+                        </div>
+                        
+                        <div class="right">
+                            <p>{{listing.price}} BGN</p>
+                        </div>
+                    </div>
+    
+                    <div class="bottom">
+                        <p>{{listing.company.name}}</p>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </main>
+</div>

@@ -1,0 +1,19 @@
+<form [formGroup]="loginForm" (ngSubmit)="handleSubmit()">
+    <h2>Log into your account</h2>
+
+    <label for="username">Username</label>
+    <input name="username" type="text" formControlName="username">
+
+    <label for="password" class="not-first">Password</label>
+    <input #pass name="password" type="password" formControlName="password">
+    <i *ngIf="passVisible" class="fa fa-eye-slash" id="togglePassword" (click)="changeVisibility(pass)"></i>
+    <i *ngIf="!passVisible" class="far fa-eye" id="togglePassword" (click)="changeVisibility(pass)"></i>
+
+    <span class="forgot" routerLink="/forgotPassword">Forgot password?</span>
+
+    <input type="submit" class="submit">
+
+    <p class="have">Don't have an account? <a routerLink="/register">Register</a></p>
+
+    <p class="error">{{errorMessage}}</p>
+</form>

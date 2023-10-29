@@ -1,0 +1,160 @@
+header {
+    display: flex;
+    justify-content: space-between;
+
+    height: 10vh;
+
+    padding-left: 1em;
+    padding-right: 1em;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    background-color: #002F34;
+}
+
+h1 {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+
+    background-color: #F2F4F5;
+    min-height: 90vh;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+    
+    flex-basis: 75%;
+
+    padding-top: 2em;
+}
+
+.search {
+    display: flex;
+    justify-content: center;
+    width: 30vw;
+
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 10vw;
+}
+
+.search > input {
+    flex-basis: 80%;
+    font-size: medium;
+    padding: 0.4em;
+
+    border-top-left-radius: 1em;
+    border-bottom-left-radius: 1em;
+
+    border-style: solid;
+    border-color: #23E5DB;
+    border-width: 0.2em;
+}
+
+.search > button {
+    padding-top: 0.4em;
+    padding-bottom: 0.4em;
+    padding-left: 1em;
+    padding-right: 1em;
+
+    border-top-right-radius: 1em;
+    border-bottom-right-radius: 1em;
+
+    background-color: #23E5DB;
+    border-style: solid;
+    border-color: #23E5DB;
+    border-width: 0.2em;
+}
+
+.search > button:hover {
+    cursor: pointer;
+
+    color: white;
+}
+
+.cart {
+    display: flex;
+}
+
+.cart > p {
+    position: relative;
+    top: 0.4em;
+
+    background-color: red;
+    color: white;
+
+    height: 1.2em;
+    width: 1.2em;
+    padding: 0.2em;
+    text-align: center;
+    line-height: 0.7em;
+
+    border-radius: 50%;
+
+    cursor: pointer;
+}
+
+.cart > img{
+    cursor: pointer;
+    position: relative;
+    left: 1.5em;
+}
+
+.bookmark {
+    height: 7vh;
+
+    margin-top: 1.4vh;
+    margin-right: 2vw;
+}
+
+a {
+    text-decoration: none;
+    color: #002F34;
+}
+
+.loader {
+    width: fit-content;
+
+    margin: auto;
+    margin-top: 40vh;
+}
+
+.logo {
+    display: flex;
+}
+
+.logo > img {
+    position: absolute;
+
+    height: 10.5vh;
+}
+
+.logo:hover {
+    cursor: pointer;
+}
+
+.a {
+    z-index: 900;
+}
+
+.logo:hover > .b {
+    z-index: 999;
+}
+
+@media screen and (max-width:800px){
+    .a{
+        display: none;
+    }
+    .b{
+        display: none;
+    }
+}

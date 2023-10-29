@@ -1,0 +1,27 @@
+<div class="popup">
+    <div class="popup-content">
+        <div class="products" *ngIf="!popupLoading">
+            <div class="product" *ngFor="let item of itemsToDisplay">
+                <h2>{{item[0].name}}</h2>
+                <button #butt2 class="plus" value="{{item[0].id}}" (click)="removeFromCart(butt2.value)"><p>-</p></button>
+                <p>Qty: {{item[1]}}</p>
+                <button #butt class="plus" value="{{item[0].id}}" (click)="addToCart(butt.value)"><p>+</p></button>
+            </div>
+        </div>
+
+        <div class="loader" *ngIf="popupLoading">
+            <app-spinner></app-spinner>
+        </div>
+
+        <div class="empty" *ngIf="noItems">
+            <h2>No items</h2>
+        </div>
+        
+        <div class="buttons">
+            <button (click)="purchase()" class="end">Purchase</button>
+            <button (click)="closeCart()" class="end">Cancel</button>
+        </div>
+
+        <span (click)="purchaseCrypto()">Pay with crypto?</span>
+    </div>
+</div>

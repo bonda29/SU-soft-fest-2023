@@ -1,0 +1,48 @@
+<header>
+    <div class="logo" routerLink="/">
+        <img class="a" src="assets/logo.png" alt="LOGO">
+        <img class="b" src="assets/logoWhite.png" alt="LOGO">
+        <img class="small" src="assets/logoSmall.png" alt="">
+    </div>
+
+    <div class="cart">
+        <img src="assets/shoppingCartWhite.png" alt="shoppingCart" (click)="openCart()">
+        <p>{{cartStore}}</p>
+    </div>
+</header>
+
+<app-cart-popup [cartOpen]="cartOpen" (closePopup)="openCart()" *ngIf="cartOpen"></app-cart-popup>
+
+<div class="wrapper" *ngIf="!loaderService.isLoading">
+    <div class="imageContainer">
+        <img src="{{listing.image}}" alt="">
+    </div>
+
+    <div class="infoContainer">
+        <div class="head">
+            <h2>{{listing.name}}</h2>
+            <p>{{listing.description}}</p>
+
+            <div class="price">
+                <p>{{listing.price}}.00 BGN</p>
+                <a (click)="addToCart()"><button>ADD TO CART</button></a>
+            </div>
+        </div>
+        
+        <div class="company">
+            <h2>{{listing.company.name}}</h2>
+            <div *ngIf="!bookmarkService.bookmarked">
+                <img src="assets/bookmarkGreen.png" alt="" (click)="addBookmark(listing.id)" class="up">
+                <img src="assets/bookmarkBlack.png" alt="" class="down">
+            </div>
+            <div *ngIf="bookmarkService.bookmarked">
+                <img src="assets/bookmarkOrange.png" alt="" (click)="addBookmark(listing.id)">
+            </div>
+        </div>
+    </div>
+     
+</div>
+
+<div class="loader" *ngIf="loaderService.isLoading">
+    <app-spinner></app-spinner>
+</div>

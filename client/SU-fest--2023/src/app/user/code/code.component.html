@@ -1,0 +1,12 @@
+<form [formGroup]="forgotPasswordForm" (ngSubmit)="handleSubmit()">
+    <h2>Enter Email to reset password</h2>
+
+    <label for="email">Email</label>
+    <input name="email" type="email" formControlName="email">
+    
+    <input type="submit" class="submit">
+
+    <a href="/login">Back to log in</a>
+
+    <p class="error">{{errorMessage}}</p>
+</form>

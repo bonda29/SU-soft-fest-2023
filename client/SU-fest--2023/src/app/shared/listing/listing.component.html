@@ -1,0 +1,23 @@
+<div class="listing">
+    <img src="{{listing.image}}" alt="">
+
+    <div class="content">
+        <div class = "top">
+            <div class="left">
+                <h2>{{listing.name}}</h2>
+            </div>
+            
+            <div class="right">
+                <p>{{listing.price}} BGN</p>
+            </div>
+        </div>
+
+        <div class="bottom">
+            <p>{{listing.company.name}}</p>
+            <a href="javascript:void(0);">
+                <img *ngIf="!isBookmarked" src="assets/bookmarkBlack.png" alt="" (click)="addBookmark(listing.id)">
+                <img *ngIf="isBookmarked" src="assets/bookmarkOrange.png" alt="" (click)="addBookmark(listing.id)">
+            </a>
+        </div>
+    </div>
+</div>

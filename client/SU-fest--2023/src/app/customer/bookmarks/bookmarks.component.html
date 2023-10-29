@@ -1,0 +1,19 @@
+<header>
+    <div class="logo" routerLink="/">
+        <img class="a" src="assets/logo.png" alt="LOGO">
+        <img class="b" src="assets/logoWhite.png" alt="LOGO">
+    </div>
+
+    <div class="cart">
+        <img src="assets/bookmark.png" alt="bookmark" class="bookmark" routerLink="/customer-home">
+    </div>
+</header>
+
+<div class="wrapper" *ngIf="!loaderService.isLoading">
+    <main>
+        <h2 *ngIf="noListings">No listings</h2>
+        <a *ngFor="let listing of listings" href="/customer-details/{{listing.id}}">
+            <app-listing [listing]="listing"></app-listing>
+        </a>
+    </main>
+</div>

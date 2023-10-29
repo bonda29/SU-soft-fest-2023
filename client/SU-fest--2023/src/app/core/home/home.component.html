@@ -1,0 +1,13 @@
+<div class="wrapper">
+    <h1>Welcome to NIMBLE.</h1>
+    
+    <div *ngIf="!authService.isLoggedIn" class="buttons">
+        <a routerLink="/login"><button>Login</button></a>
+        <a routerLink="/register"><button>Register</button></a>
+    </div>
+
+    <div *ngIf="authService.isLoggedIn" class="buttons">
+        <a><button (click)="home()">Home</button></a>
+        <a><button (click)="logout()">Logout</button></a>
+    </div>
+</div>
